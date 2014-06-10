@@ -1,0 +1,111 @@
+#!/bin/bash
+
+readonly SRC_DIR=~/src
+
+update_package_cache()
+{
+	echo "updating package cache"
+	sudo apt-get update > /dev/null
+}
+
+install_packages()
+{
+	local packages="openssh-server git python-setuptools"
+
+	echo "installing required packages"
+	sudo apt-get install "${packages}" > /dev/null
+}
+
+install_ansible()
+{
+	mkdir -p ${SRC_DIR}/ansible
+	pushd ${SRC_DIR}/ansible > /dev/null
+
+	# download ansible
+	if [[ ! -d ansible/.git ]]; then
+		echo "installing ansible"
+		git clone git://github.com/ansible/ansible.git
+	else
+		echo "updating ansible to latest"
+		pushd ansible > /dev/null
+		git pull > /dev/null
+		popd > /dev/null
+	fi
+
+	# install ansible
+	pushd ansible > /dev/null
+	sudo make install > /dev/null 2>&1
+
+	# configure env
+	source ./hacking/env-setup > /dev/null 2>&1
+	popd > /dev/null
+
+	popd > /dev/null
+}
+
+enable_ssh()
+{
+	echo "enabling ssh access on port 22"
+	sudo ufw allow 22 > /dev/null
+}
+
+create_ssh_keys()
+{
+	local ssh_dir=~/.ssh
+
+	if [[ ! -f ${ssh_dir}/id_rsa ]]; then
+		mkdir -p ${ssh_dir}
+		chmod 700 ${ssh_dir}
+
+		pushd ${ssh_dir} > /dev/null
+		ssh-keygen -t rsa -b 4096 -f ${ssh_dir}/id_rsa
+		popd > /dev/null
+	fi
+
+	pushd ${ssh_dir} > /dev/null
+
+	local key=$(cat id_rsa.pub)
+	if [[ ! -f authorized_keys ]]; then
+		touch authorized_keys
+	fi
+	if ! grep "${key}" authorized_keys > /dev/null; then
+		echo "adding public key to localhost authorized_keys"
+		echo "${key}" >> authorized_keys
+	fi
+
+	popd > /dev/null
+}
+
+run_playbook()
+{
+	mkdir -p ${SRC_DIR}/ansible
+	pushd ${SRC_DIR}/ansible > /dev/null
+
+	if [[ ! -d ansible-playbooks/.git ]]; then
+		echo "installing ansible-playbooks"
+		git clone git@github.com:stevelorimer/ansible-playbooks.git
+	else
+		echo "updating ansible-playbooks to latest"
+		pushd ansible-playbooks > /dev/null
+		git pull > /dev/null
+		popd > /dev/null
+	fi
+	
+	echo "running ansible playbook"
+	pushd ansible-playbooks/dev > /dev/null
+	ansible-playbook -i hosts provision.yml --ask-sudo-pass
+	popd > /dev/null
+
+	popd > /dev/null
+}
+
+main() 
+{
+	update_package_cache
+	install_packages
+	install_ansible
+	enable_ssh
+	create_ssh_keys
+	run_playbook
+}
+main

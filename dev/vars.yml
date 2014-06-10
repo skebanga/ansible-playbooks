@@ -1,8 +1,8 @@
 ---
-runas: steve
-logwatch-email: steve.lorimer@gmail.com
-system_packages:
-    - vim
-    - sublime-text
-    - eclipse
+logwatch-email: steve@vivcourt.com
+required-packages:
+  - vim
+  - eclipse-cdt
+  - eclipse-cdt-valgrind
+sublime-text-deb: http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb 
 

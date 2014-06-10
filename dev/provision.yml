@@ -2,7 +2,6 @@
 - hosts: local
   vars_files:
     - vars.yml
-  remote_user: "{{ runas }}"
   gather_facts: false
   sudo: true
 
@@ -10,8 +9,15 @@
     - name: Test machine is up
       ping:
 
-    - name: Update package cache
-      apt: update_cache=yes
-
     - name: Upgrade to the lastest packages
-      apt: upgrade=safe
+      apt: upgrade=dist
+
+    - name: Install required packages
+      apt: pkg={{item}} state=installed
+      with_items: required-packages
+
+    - name: Download Sublime Text 3
+      get_url: url={{sublime-text-deb}} dest=/tmp/sublime-text-3.deb
+
+    - name: Install Sublime Text 3
+      apt: deb=/tmp/sublime-text-3.deb
