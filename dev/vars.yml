@@ -1,0 +1,8 @@
+---
+runas: steve
+logwatch-email: steve.lorimer@gmail.com
+system_packages:
+    - vim
+    - sublime-text
+    - eclipse
+

@@ -1,0 +1,17 @@
+---
+- hosts: local
+  vars_files:
+    - vars.yml
+  remote_user: "{{ runas }}"
+  gather_facts: false
+  sudo: true
+
+  tasks:
+    - name: Test machine is up
+      ping:
+
+    - name: Update package cache
+      apt: update_cache=yes
+
+    - name: Upgrade to the lastest packages
+      apt: upgrade=safe
