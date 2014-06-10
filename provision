@@ -73,6 +73,8 @@ create_ssh_keys()
 		echo "${key}" >> authorized_keys
 	fi
 
+	# ssh-copy-id -i ~/.ssh/id_rsa.pub seagal
+
 	popd > /dev/null
 }
 

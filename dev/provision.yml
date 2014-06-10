@@ -6,18 +6,15 @@
   sudo: true
 
   tasks:
-    - name: Test machine is up
-      ping:
-
     - name: Upgrade to the lastest packages
       apt: upgrade=dist
 
     - name: Install required packages
       apt: pkg={{item}} state=installed
-      with_items: required-packages
+      with_items: required_packages
 
     - name: Download Sublime Text 3
-      get_url: url={{sublime-text-deb}} dest=/tmp/sublime-text-3.deb
+      get_url: url={{sublime_text_deb}} dest=/tmp/sublime-text-3.deb
 
     - name: Install Sublime Text 3
       apt: deb=/tmp/sublime-text-3.deb
