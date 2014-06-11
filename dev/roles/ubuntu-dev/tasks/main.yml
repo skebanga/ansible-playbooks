@@ -4,13 +4,6 @@
   with_items: required_packages
   sudo: true
 
-- name: Download Sublime Text 3
-  get_url: url={{sublime_text_deb}} dest=/tmp/sublime-text-3.deb
-
-- name: Install Sublime Text 3
-  apt: deb=/tmp/sublime-text-3.deb
-  sudo: true
-
 - name: Download hub
   git: repo=https://github.com/github/hub.git dest=/tmp/hub
 

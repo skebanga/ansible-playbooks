@@ -8,3 +8,21 @@
   with_items: required_packages
   sudo: true
 
+- name: Download Sublime Text 3
+  get_url: url={{sublime_text_deb}} dest=/tmp/sublime-text-3.deb
+
+- name: Install Sublime Text 3
+  apt: deb=/tmp/sublime-text-3.deb
+  sudo: true
+
+- name: Add Google apt key
+  apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state=present
+  sudo: true
+
+- name: Add Google repository
+  copy: src=google-chrome.list dest=/etc/apt/sources.list.d/google-chrome.list owner=root group=root mode=644
+  sudo: true
+
+- name: Install Chrome
+  apt: pkg=google-chrome-stable state=installed update_cache=yes
+  sudo: true
