@@ -4,8 +4,14 @@ readonly SRC_DIR=~/src
 
 update_package_cache()
 {
-	echo "updating package cache"
-	sudo apt-get update > /dev/null
+	local now=$(date +%s)
+	local prev=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp)
+	local diff=$(expr $now - $prev)
+	
+	if (( diff > 86400 )); then 		# 1 day
+		echo "updating package cache"
+		sudo apt-get update > /dev/null
+	fi
 }
 
 install_packages()
@@ -13,7 +19,7 @@ install_packages()
 	local packages="openssh-server git python-setuptools"
 
 	echo "installing required packages"
-	sudo apt-get install "${packages}" > /dev/null
+	sudo apt-get install ${packages} > /dev/null
 }
 
 install_ansible()
