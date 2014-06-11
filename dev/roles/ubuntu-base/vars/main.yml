@@ -1,0 +1,8 @@
+---
+required_packages:
+  - vim
+  - htop
+  - nethogs
+  - nload
+  - iptraf
+

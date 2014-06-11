@@ -1,0 +1,23 @@
+---
+- name: Install required packages
+  apt: pkg={{item}} state=installed
+  with_items: required_packages
+  sudo: true
+
+- name: Download Sublime Text 3
+  get_url: url={{sublime_text_deb}} dest=/tmp/sublime-text-3.deb
+
+- name: Install Sublime Text 3
+  apt: deb=/tmp/sublime-text-3.deb
+  sudo: true
+
+- name: Download hub
+  git: repo=https://github.com/github/hub.git
+       dest=/tmp/hub
+
+- name: Install hub
+  command: rake install prefix=/usr/local chdir=/tmp/hub creates=/usr/local/hub
+  sudo: true       
+
+- name: Configure git
+  template: src=git-config dest={{ansible_env.HOME}}/.gitconfig

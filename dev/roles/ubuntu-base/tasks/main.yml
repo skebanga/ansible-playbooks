@@ -1,0 +1,10 @@
+---
+- name: Upgrade to the lastest packages
+  apt: upgrade=dist
+  sudo: true
+
+- name: Install required packages
+  apt: pkg={{item}} state=installed
+  with_items: required_packages
+  sudo: true
+

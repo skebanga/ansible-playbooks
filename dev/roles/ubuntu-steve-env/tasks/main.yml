@@ -1,0 +1,8 @@
+- name: Download dotfiles
+  git: repo=https://github.com/stevelorimer/dotfiles.git dest={{ ansible_env.HOME }}/src/dotfiles
+
+- name: Install .bash_aliases
+  file: src={{ ansible_env.HOME }}/src/dotfiles/bash_aliases dest={{ ansible_env.HOME }}/.bash_aliases owner={{ ansible_env.USER }} group={{ ansible_env.USER }} state=link
+
+- name: Install .vimrc
+  file: src={{ ansible_env.HOME }}/src/dotfiles/vimrc dest={{ ansible_env.HOME }}/.vimrc owner={{ ansible_env.USER }} group={{ ansible_env.USER }} state=link

@@ -1,12 +1,9 @@
 ---
-logwatch_email: steve@vivcourt.com
+email: steve@vivcourt.com
+name: Steve Lorimer
 required_packages:
-  - vim
+  - rake
   - eclipse-cdt
   - eclipse-cdt-valgrind
-  - htop
-  - nethogs
-  - nload
-  - iptraf
 sublime_text_deb: http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb 
 

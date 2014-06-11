@@ -1,6 +1,14 @@
 #!/bin/bash
 
 readonly SRC_DIR=~/src
+readonly LOG=/tmp/provision.out
+
+clear_log()
+{
+
+	echo "logging in ${LOG}"
+	rm -f ${LOG}
+}
 
 update_package_cache()
 {
@@ -8,9 +16,10 @@ update_package_cache()
 	local prev=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp)
 	local diff=$(expr $now - $prev)
 	
-	if (( diff > 86400 )); then 		# 1 day
+	# older than 1 day
+	if (( diff > 86400 )); then 
 		echo "updating package cache"
-		sudo apt-get update > /dev/null
+		sudo apt-get update >> ${LOG}
 	fi
 }
 
@@ -19,13 +28,13 @@ install_packages()
 	local packages="openssh-server git python-setuptools"
 
 	echo "installing required packages"
-	sudo apt-get install ${packages} > /dev/null
+	sudo apt-get -y install ${packages} >> ${LOG}
 }
 
 install_ansible()
 {
 	mkdir -p ${SRC_DIR}/ansible
-	pushd ${SRC_DIR}/ansible > /dev/null
+	pushd ${SRC_DIR}/ansible >> ${LOG}
 
 	# download ansible
 	if [[ ! -d ansible/.git ]]; then
@@ -33,26 +42,26 @@ install_ansible()
 		git clone git://github.com/ansible/ansible.git
 	else
 		echo "updating ansible to latest"
-		pushd ansible > /dev/null
-		git pull > /dev/null
-		popd > /dev/null
+		pushd ansible >> ${LOG}
+		git pull >> ${LOG}
+		popd >> ${LOG}
 	fi
 
 	# install ansible
-	pushd ansible > /dev/null
-	sudo make install > /dev/null 2>&1
+	pushd ansible >> ${LOG}
+	sudo make install >> ${LOG} 2>&1
 
 	# configure env
-	source ./hacking/env-setup > /dev/null 2>&1
-	popd > /dev/null
+	source ./hacking/env-setup >> ${LOG} 2>&1
+	popd >> ${LOG}
 
-	popd > /dev/null
+	popd >> ${LOG}
 }
 
 enable_ssh()
 {
 	echo "enabling ssh access on port 22"
-	sudo ufw allow 22 > /dev/null
+	sudo ufw allow 22 >> ${LOG}
 }
 
 create_ssh_keys()
@@ -63,52 +72,53 @@ create_ssh_keys()
 		mkdir -p ${ssh_dir}
 		chmod 700 ${ssh_dir}
 
-		pushd ${ssh_dir} > /dev/null
+		pushd ${ssh_dir} >> ${LOG}
 		ssh-keygen -t rsa -b 4096 -f ${ssh_dir}/id_rsa
-		popd > /dev/null
+		popd >> ${LOG}
 	fi
 
-	pushd ${ssh_dir} > /dev/null
+	pushd ${ssh_dir} >> ${LOG}
 
 	local key=$(cat id_rsa.pub)
 	if [[ ! -f authorized_keys ]]; then
 		touch authorized_keys
 	fi
-	if ! grep "${key}" authorized_keys > /dev/null; then
+	if ! grep "${key}" authorized_keys >> ${LOG}; then
 		echo "adding public key to localhost authorized_keys"
 		echo "${key}" >> authorized_keys
 	fi
 
 	# ssh-copy-id -i ~/.ssh/id_rsa.pub seagal
 
-	popd > /dev/null
+	popd >> ${LOG}
 }
 
 run_playbook()
 {
 	mkdir -p ${SRC_DIR}/ansible
-	pushd ${SRC_DIR}/ansible > /dev/null
+	pushd ${SRC_DIR}/ansible >> ${LOG}
 
 	if [[ ! -d ansible-playbooks/.git ]]; then
 		echo "installing ansible-playbooks"
 		git clone git@github.com:stevelorimer/ansible-playbooks.git
 	else
 		echo "updating ansible-playbooks to latest"
-		pushd ansible-playbooks > /dev/null
-		git pull > /dev/null
-		popd > /dev/null
+		pushd ansible-playbooks >> ${LOG}
+		git pull >> ${LOG}
+		popd >> ${LOG}
 	fi
 	
 	echo "running ansible playbook"
-	pushd ansible-playbooks/dev > /dev/null
-	ansible-playbook -i hosts provision.yml --ask-sudo-pass
-	popd > /dev/null
+	pushd ansible-playbooks/dev >> ${LOG}
+ 	ansible-playbook -i "local," ubuntu-dev-steve.yml --ask-sudo-pass
+	popd >> ${LOG}
 
-	popd > /dev/null
+	popd >> ${LOG}
 }
 
 main() 
 {
+	clear_log
 	update_package_cache
 	install_packages
 	install_ansible
