@@ -1,0 +1,11 @@
+---
+- hosts: local
+  gather_facts: true
+  vars:
+    ansible_connection: local
+  sudo: false
+  user: "{{ ansible_env.USER }}"
+  roles:
+    - ubuntu-base
+    - ubuntu-steve-env
+
