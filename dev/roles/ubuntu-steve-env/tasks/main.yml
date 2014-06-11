@@ -1,3 +1,9 @@
+---
+- name: Install required packages
+  apt: pkg={{item}} state=installed
+  with_items: required_packages
+  sudo: true
+
 - name: Download dotfiles
   git: repo=https://github.com/stevelorimer/dotfiles.git dest={{ ansible_env.HOME }}/src/dotfiles
 
@@ -6,3 +12,6 @@
 
 - name: Install .vimrc
   file: src={{ ansible_env.HOME }}/src/dotfiles/vimrc dest={{ ansible_env.HOME }}/.vimrc owner={{ ansible_env.USER }} group={{ ansible_env.USER }} state=link
+
+- name: Disable unity search
+  shell: wget -q -O - https://fixubuntu.com/fixubuntu.sh | bash

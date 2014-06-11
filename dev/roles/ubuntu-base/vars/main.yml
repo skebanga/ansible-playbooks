@@ -1,6 +1,7 @@
 ---
 required_packages:
   - vim
+  - meld
   - htop
   - nethogs
   - nload
