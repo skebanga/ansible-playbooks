@@ -8,7 +8,7 @@
   git: repo=https://github.com/stevelorimer/dotfiles.git dest={{ ansible_env.HOME }}/.dotfiles
 
 - name: Install dotfiles
-  shell: cd {{ ansible_env.HOME }}/.dotfiles && install_local
+  shell: cd {{ ansible_env.HOME }}/.dotfiles; ./install_local
 
 - name: Disable unity search
   shell: wget -q -O - https://fixubuntu.com/fixubuntu.sh | bash

@@ -1,8 +1,9 @@
 ---
 required_packages:
-  - eclipse-cdt
-  - eclipse-cdt-valgrind
-  - libboost-dev
+  - libgoogle-perftools-dev
+  - libboost1.55-all-dev
+  - libzmq3-dev
+  - libprotobuf-dev
   - g++
   - python-dev
   - python-pip

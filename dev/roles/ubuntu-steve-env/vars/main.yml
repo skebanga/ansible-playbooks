@@ -1,3 +1,15 @@
 ---
 required_packages:
   - compizconfig-settings-manager
+  - eclipse-platform
+  - eclipse-platform-data
+  - eclipse-rcp
+  - eclipse-cdt
+  - eclipse-cdt-valgrind
+  - eclipse-cdt-launch-remote
+  - eclipse-rse
+  - eclipse-cdt-perf
+  - eclipse-cdt-profiling-framework
+  - eclipse-cdt-profiling-framework-remote
+  - eclipse-cdt-valgrind-remote
+  - eclipse-egit

@@ -1,12 +1,14 @@
 ---
 required_packages:
-  - git
-  - libboost-dev
+  - libgoogle-perftools-dev
+  - libboost1.55-all-dev
+  - libzmq3-dev
+  - libprotobuf-dev
   - g++
   - python-dev
   - python-pip
-google_proto_buf_ver: protobuf-2.4.1
-google_proto_buf_src: https://protobuf.googlecode.com/files/{{ google_proto_buf_ver }}.tar.gz
-zeromq_ver: zeromq-3.2.4
-zeromq_src: http://download.zeromq.org/{{ zeromq_ver }}.tar.gz
+# google_proto_buf_ver: protobuf-2.4.1
+# google_proto_buf_src: https://protobuf.googlecode.com/files/{{ google_proto_buf_ver }}.tar.gz
+# zeromq_ver: zeromq-3.2.4
+# zeromq_src: http://download.zeromq.org/{{ zeromq_ver }}.tar.gz
 pyev_ver: 0.8.1-4.04

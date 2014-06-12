@@ -10,36 +10,22 @@
 - name: Add ssh key to seagal
   shell: ssh-copy-id -i {{ ansible_env.HOME }}/.ssh/id_rsa.pub seagal
 
-- include: include/build.yml
-    package=protobuf
-    package_url={{ google_proto_buf_src }}
-    creates=/usr/lib/libprotobuf.a
-    ext=tar.gz
-    unpacked_dir={{ google_proto_buf_ver }}
+# - include: include/build.yml
+#     package=protobuf
+#     package_url={{ google_proto_buf_src }}
+#     creates=/usr/lib/libprotobuf.a
+#     ext=tar.gz
+#     unpacked_dir={{ google_proto_buf_ver }}
 
-- include: include/build.yml
-    package=zeromq
-    package_url={{ zeromq_src }}
-    creates=/usr/lib/libzmq.a
-    ext=tar.gz
-    unpacked_dir={{ zeromq_ver }}
+# - include: include/build.yml
+#     package=zeromq
+#     package_url={{ zeromq_src }}
+#     creates=/usr/lib/libzmq.a
+#     ext=tar.gz
+#     unpacked_dir={{ zeromq_ver }}
 
 - name: Install pyev
   pip: name=pyev version={{ pyev_ver }}
   sudo: true
 
-- name: Check whether boost already exists
-  command: /usr/bin/test -e /usr/local/lib/libboost_program_options.a
-  register: boost_exists
-  ignore_errors: true
-
-- name: rsync boost libs from hoff
-  shell: rsync -a --include 'libboost*' --include '*/' --exclude '*' {{ ansible_env.USER }}@hoff:/usr/local/lib/ /usr/local/lib
-  sudo: true
-  when: boost_exists|failed
-
-- name: rsync boost includes from hoff
-  shell: rsync -a {{ ansible_env.USER }}@hoff:/usr/local/include/boost /usr/local/include
-  sudo: true
-  when: boost_exists|failed
 

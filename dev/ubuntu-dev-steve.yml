@@ -6,8 +6,8 @@
   sudo: false
   user: "{{ ansible_env.USER }}"
   roles:
-    # - ubuntu-base
-    # - ubuntu-dev
+    - ubuntu-base
+    - ubuntu-dev
     - ubuntu-vivcourt
-    # - ubuntu-steve-env
+    - ubuntu-steve-env
 
