@@ -4,15 +4,3 @@
   with_items: required_packages
   sudo: true
 
-- name: Download hub
-  git: repo=https://github.com/github/hub.git dest=/tmp/hub
-
-- name: Install hub
-  command: rake install prefix=/usr/local chdir=/tmp/hub creates=/usr/local/bin/hub
-  sudo: true       
-
-- name: Configure git
-  template: src=git-config dest={{ansible_env.HOME}}/.gitconfig
-
-- name: Enable integrated menus
-  command: gsettings set com.canonical.Unity integrated-menus true

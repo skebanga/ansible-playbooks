@@ -1,0 +1,29 @@
+---
+- name: Check whether {{ package }} already exists
+  command: /usr/bin/test -e {{ creates }}
+  register: package_exists
+  ignore_errors: true
+
+- name: Create {{ package }} src directory
+  file: path=/tmp/{{ package }} state=directory
+  when: package_exists|failed
+
+- name: Download {{ package }}
+  get_url: url={{ package_url }} dest=/tmp/{{ package }}/src.{{ ext }}
+  when: package_exists|failed
+
+- name: Unpack {{ package }}
+  unarchive: src=/tmp/{{ package }}/src.tar.gz dest=/tmp/{{ package }}
+  when: package_exists|failed
+
+- name: Build {{ package }}
+  shell: cd /tmp/{{ package }}/{{ unpacked_dir }}; {{item}}
+  with_items:
+    - ./configure --prefix=/usr
+    - make
+  when: package_exists|failed
+
+- name: Install {{ package }}
+  shell: cd /tmp/{{ package }}/{{ unpacked_dir }}; make install
+  sudo: true
+  when: package_exists|failed

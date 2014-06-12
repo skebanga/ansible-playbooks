@@ -8,6 +8,16 @@
   with_items: required_packages
   sudo: true
 
+- name: Download hub
+  git: repo=https://github.com/github/hub.git dest=/tmp/hub
+
+- name: Install hub
+  command: rake install prefix=/usr/local chdir=/tmp/hub creates=/usr/local/bin/hub
+  sudo: true       
+
+- name: Configure git
+  template: src=git-config dest={{ansible_env.HOME}}/.gitconfig
+
 - name: Download Sublime Text 3
   get_url: url={{sublime_text_deb}} dest=/tmp/sublime-text-3.deb
 
@@ -19,10 +29,13 @@
   apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state=present
   sudo: true
 
-- name: Add Google repository
-  copy: src=google-chrome.list dest=/etc/apt/sources.list.d/google-chrome.list owner=root group=root mode=644
+- name: Add Google repo
+  copy: src=google-chrome.list dest=/etc/apt/sources.list.d/google-chrome.list owner=root group=root mode=644 force=false
   sudo: true
+  register: added_gogole_repo
 
 - name: Install Chrome
   apt: pkg=google-chrome-stable state=installed update_cache=yes
   sudo: true
+  when: added_gogole_repo|changed
+

@@ -1,10 +1,13 @@
 ---
+email: steve@vivcourt.com
+name: Steve Lorimer
 required_packages:
   - vim
   - meld
+  - rake
   - htop
   - nethogs
   - nload
   - iptraf
-sublime_text_deb: http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb 
+sublime_text_deb: http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb
 

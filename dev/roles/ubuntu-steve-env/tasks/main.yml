@@ -8,7 +8,25 @@
   git: repo=https://github.com/stevelorimer/dotfiles.git dest={{ ansible_env.HOME }}/.dotfiles
 
 - name: Install dotfiles
-  shell: cd {{ ansible_env.HOME }}/.dotfiles && make
+  shell: cd {{ ansible_env.HOME }}/.dotfiles && install_local
 
 - name: Disable unity search
   shell: wget -q -O - https://fixubuntu.com/fixubuntu.sh | bash
+
+- name: Disable show desktop in alt-tab
+  command: gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ disable-show-desktop true
+
+- name: Enable integrated menus
+  command: gsettings set com.canonical.Unity integrated-menus true
+
+- name: Set default nautilus folder view to list-view
+  command: gsettings set org.gnome.nautilus.preferences default-folder-viewer "'list-view'"
+
+- name: Set default nautilus list-view zoom to smallest
+  command: gsettings set org.gnome.nautilus.list-view default-zoom-level "smallest"
+
+- name: Set default nautilus icon-view zoom to small
+  command: gsettings set org.gnome.nautilus.icon-view default-zoom-level "small"
+
+- name: Set gnome-terminal scrollback_lines to 10000
+  command: gconftool-2 -t int --set /apps/gnome-terminal/profiles/Default/scrollback_lines 10000

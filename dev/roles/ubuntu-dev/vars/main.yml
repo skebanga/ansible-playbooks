@@ -1,8 +1,9 @@
 ---
-email: steve@vivcourt.com
-name: Steve Lorimer
 required_packages:
-  - rake
   - eclipse-cdt
   - eclipse-cdt-valgrind
+  - libboost-dev
+  - g++
+  - python-dev
+  - python-pip
 
