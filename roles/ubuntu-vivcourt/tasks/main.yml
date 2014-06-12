@@ -10,12 +10,12 @@
 - name: Add ssh key to seagal
   shell: ssh-copy-id -i {{ ansible_env.HOME }}/.ssh/id_rsa.pub seagal
 
-# - include: include/build.yml
-#     package=protobuf
-#     package_url={{ google_proto_buf_src }}
-#     creates=/usr/lib/libprotobuf.a
-#     ext=tar.gz
-#     unpacked_dir={{ google_proto_buf_ver }}
+- include: include/build.yml
+    package=protobuf
+    package_url={{ google_proto_buf_src }}
+    creates=/usr/lib/libprotobufas.a
+    ext=tar.gz
+    unpacked_dir={{ google_proto_buf_ver }}
 
 # - include: include/build.yml
 #     package=zeromq

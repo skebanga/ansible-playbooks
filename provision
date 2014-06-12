@@ -24,9 +24,9 @@ update_package_cache()
 	local now=$(date +%s)
 	local prev=$(stat -c %Y /var/lib/apt/periodic/update-success-stamp)
 	local diff=$(expr $now - $prev)
-	
+
 	# older than 1 day
-	if (( diff > 86400 )); then 
+	if (( diff > 86400 )); then
 		echo "updating package cache"
 		sudo apt-get update >> ${LOG}
 	fi
@@ -115,16 +115,16 @@ run_playbook()
 		git pull >> ${LOG}
 		popd >> ${LOG}
 	fi
-	
+
 	echo "running ansible playbook"
-	pushd ansible-playbooks/dev >> ${LOG}
+	pushd ansible-playbooks >> ${LOG}
  	ansible-playbook -i "local," $ARGS --ask-sudo-pass
 	popd >> ${LOG}
 
 	popd >> ${LOG}
 }
 
-main() 
+main()
 {
 	check_args
 	clear_log
