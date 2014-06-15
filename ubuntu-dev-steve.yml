@@ -6,7 +6,7 @@
     user: "{{ ansible_env.USER }}"
     email: steve.lorimer@gmail.com
     postfix_domain: postfix.lori.com
-    postfix_email: "{{ email | regex_replace('^(.*)@.*$', '\\\\1') }}+{{ ansible_hostname }}@{{ email | regex_replace('^.*@(.*)$', '\\\\1') }}"
+    notify_email: "{{ email | regex_replace('^(.*)@.*$', '\\\\1') }}+{{ ansible_hostname }}@{{ email | regex_replace('^.*@(.*)$', '\\\\1') }}"
   sudo: false
   user: "{{ user }}"
   roles:

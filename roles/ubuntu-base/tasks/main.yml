@@ -12,7 +12,14 @@
     - nload
     - iptraf
     - unattended-upgrades
+    - logwatch
+    - fail2ban
   sudo: true
+
+  # git config
+
+- name: Configure git
+  template: src=git-config dest={{ansible_env.HOME}}/.gitconfig
 
   # unattended upgrades
 
@@ -39,15 +46,23 @@
     - mailutils
   sudo: true
 
-- name: Configure root alias
-  lineinfile: "dest=/etc/aliases regexp='^root:' line='root: {{ postfix_email }}'"
+- name: Configure root alias to send to notify_email
+  lineinfile: "dest=/etc/aliases regexp='^root:' line='root: {{ notify_email }}'"
   notify: newaliases
   sudo: true
 
-  # git
+  # logwatch
 
-- name: Configure git
-  template: src=git-config dest={{ansible_env.HOME}}/.gitconfig
+- name: Copy logwatch configuration
+  copy: src=/usr/share/logwatch/default.conf/logwatch.conf dest=/etc/logwatch/conf/logwatch.conf owner=root group=root mode=644
+  sudo: true
+
+- name: Configure logwatch
+  lineinfile: dest=/etc/logwatch/conf/logwatch.conf regexp="{{ item.regexp }}" line="{{ item.line }}" backup=yes
+  with_items:
+    - { regexp: "Format = ", line: "Format = html" }
+    - { regexp: "Output = ", line: "Output = mail" }
+  sudo: true
 
   # sublime text
 
