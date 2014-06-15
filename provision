@@ -14,7 +14,6 @@ check_args()
 
 clear_log()
 {
-
 	echo "logging in ${LOG}"
 	rm -f ${LOG}
 }
@@ -59,7 +58,8 @@ install_ansible()
 	# install ansible
 	pushd ansible >> ${LOG}
 	sudo make install >> ${LOG} 2>>${LOG}
-	# configure env
+
+	# configure ansible env
 	source ./hacking/env-setup >> ${LOG} 2>>${LOG}
 	popd >> ${LOG}
 
@@ -95,8 +95,6 @@ create_ssh_keys()
 		echo "adding public key to localhost authorized_keys"
 		echo "${key}" >> authorized_keys
 	fi
-
-	# ssh-copy-id -i ~/.ssh/id_rsa.pub seagal
 
 	popd >> ${LOG}
 }

@@ -1,8 +1,4 @@
 ---
-required_packages:
-  - libgoogle-perftools-dev
-  - libboost1.55-all-dev
-  - libzmq3-dev
 google_proto_buf_ver: protobuf-2.4.1
 google_proto_buf_src: https://protobuf.googlecode.com/files/{{ google_proto_buf_ver }}.tar.gz
 # zeromq_ver: zeromq-3.2.4

@@ -1,14 +1,17 @@
 ---
 - name: Install required packages
   apt: pkg={{item}} state=installed
-  with_items: required_packages
+  with_items:
+    - libgoogle-perftools-dev
+    - libboost1.55-all-dev
+    - libzmq3-dev
   sudo: true
 
-- name: Add ssh key to hoff
-  shell: ssh-copy-id -i {{ ansible_env.HOME }}/.ssh/id_rsa.pub hoff
-
-- name: Add ssh key to seagal
-  shell: ssh-copy-id -i {{ ansible_env.HOME }}/.ssh/id_rsa.pub seagal
+- name: Add ssh key to servers
+  shell: ssh-copy-id -i {{ ansible_env.HOME }}/.ssh/id_rsa.pub {{ item }}
+  with_items:
+    - hoff
+    - seagal
 
 - include: include/build.yml
     package=protobuf

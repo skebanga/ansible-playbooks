@@ -1,6 +1,0 @@
----
-required_packages:
-  - g++
-  - python-dev
-  - python-pip
-
