@@ -96,8 +96,6 @@ create_ssh_keys()
 		echo "${key}" >> authorized_keys
 	fi
 
-	# ssh-copy-id -i ~/.ssh/id_rsa.pub seagal
-
 	popd >> ${LOG}
 }
 
@@ -124,6 +122,13 @@ run_playbook()
 	popd >> ${LOG}
 }
 
+run_intel_graphics_installer()
+{
+	if [[ "$ARGS" -eq "ubuntu-dev-steve.yml" ]]; then # TODO: use grep
+		sudo intel-linux-graphics-installer
+	fi
+}
+
 main()
 {
 	check_args
@@ -134,5 +139,6 @@ main()
 	enable_ssh
 	create_ssh_keys
 	run_playbook
+	run_intel_graphics_installer
 }
 main

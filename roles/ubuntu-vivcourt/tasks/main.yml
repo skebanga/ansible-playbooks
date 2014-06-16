@@ -28,4 +28,17 @@
   pip: name=pyev version={{ pyev_ver }}
   sudo: true
 
+- name: Add Intel apt key
+  apt_key: url={{ item }} state=present
+  sudo: true
+  with_items:
+    - {{ intel_public_key }}
+    - {{ intel_public_key_2 }}
+
+- name: Download Intel Graphics
+  get_url: url={{ intel_graphics_deb }} dest=/tmp/intel-graphics.deb
+
+- name: Install Intel Graphics
+  apt: deb=/tmp/intel-graphics.deb
+  sudo: true
 
