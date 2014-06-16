@@ -5,6 +5,16 @@
     - libgoogle-perftools-dev
     - libboost1.55-all-dev
     - libzmq3-dev
+    - python-numpy
+    - python-scipy
+    - python-matplotlib
+  sudo: true
+
+- name: Install Python packages
+  pip: name={{ item.pkg }} version={{ item.ver }}
+  with_items:
+    - { pkg: 'protobuf', ver: '{{ pyprotobuf_ver}}' }
+    - { pkg: 'pyev',     ver: '{{ pyev_ver }}' }
   sudo: true
 
 - name: Add ssh key to servers
@@ -16,7 +26,7 @@
 - include: include/build.yml
     package=protobuf
     package_url={{ google_proto_buf_src }}
-    creates=/usr/lib/libprotobufas.a
+    creates=/usr/lib/libprotobuf.a
     ext=tar.gz
     unpacked_dir={{ google_proto_buf_ver }}
 
@@ -27,16 +37,12 @@
 #     ext=tar.gz
 #     unpacked_dir={{ zeromq_ver }}
 
-- name: Install pyev
-  pip: name=pyev version={{ pyev_ver }}
-  sudo: true
-
 - name: Add Intel apt key
   apt_key: url={{ item }} state=present
   sudo: true
   with_items:
-    - {{ intel_public_key }}
-    - {{ intel_public_key_2 }}
+    - "{{ intel_public_key }}"
+    - "{{ intel_public_key_2 }}"
 
 - name: Download Intel Graphics
   get_url: url={{ intel_graphics_deb }} dest=/tmp/intel-graphics.deb

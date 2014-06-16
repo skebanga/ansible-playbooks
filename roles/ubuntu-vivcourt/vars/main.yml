@@ -4,6 +4,7 @@ google_proto_buf_src: https://protobuf.googlecode.com/files/{{ google_proto_buf_
 # zeromq_ver: zeromq-3.2.4
 # zeromq_src: http://download.zeromq.org/{{ zeromq_ver }}.tar.gz
 pyev_ver: 0.8.1-4.04
+pyprotobuf_ver: 2.5.0
 intel_graphics_deb: https://download.01.org/gfx/ubuntu/14.04/main/pool/main/i/intel-linux-graphics-installer/intel-linux-graphics-installer_1.0.5-0intel1_amd64.deb
 intel_public_key: https://download.01.org/gfx/RPM-GPG-KEY-ilg
 intel_public_key_2: https://download.01.org/gfx/RPM-GPG-KEY-ilg-2

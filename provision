@@ -124,7 +124,7 @@ run_playbook()
 
 run_intel_graphics_installer()
 {
-	if [[ "$ARGS" -eq "ubuntu-dev-steve.yml" ]]; then # TODO: use grep
+	if [[ "$ARGS" = "./ubuntu-viv-steve.yml" ]]; then # TODO: use grep
 		sudo intel-linux-graphics-installer
 	fi
 }
@@ -139,6 +139,6 @@ main()
 	enable_ssh
 	create_ssh_keys
 	run_playbook
-	run_intel_graphics_installer
+	# run_intel_graphics_installer
 }
 main

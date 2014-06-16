@@ -53,12 +53,8 @@
 
   # logwatch
 
-- name: Copy logwatch configuration
-  copy: src=/usr/share/logwatch/default.conf/logwatch.conf dest=/etc/logwatch/logwatch.conf owner=root group=root mode=644
-  sudo: true
-
 - name: Configure logwatch
-  lineinfile: dest=/etc/logwatch/logwatch.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
+  lineinfile: dest=/usr/share/logwatch/default.conf/logwatch.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
   with_items:
     - { regexp: "^Output =.*$", line: "Output = mail" }
     - { regexp: "^Format =.*$", line: "Format = html" }

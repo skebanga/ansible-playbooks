@@ -27,7 +27,7 @@
 - name: Disable show desktop in alt-tab
   command: gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ disable-show-desktop true
 
-- name: Enable integrated menus
+- name: Enable integrated menus (show menus in windows title bar)
   command: gsettings set com.canonical.Unity integrated-menus true
 
 - name: Set default nautilus folder view to list-view
