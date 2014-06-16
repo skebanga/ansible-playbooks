@@ -1,7 +1,18 @@
 ---
 - name: Install required packages
   apt: pkg={{item}} state=installed
-  with_items: required_packages
+  with_items:
+    - compizconfig-settings-manager
+    - eclipse-cdt
+    - eclipse-cdt-valgrind
+    - eclipse-cdt-perf
+    - eclipse-cdt-profiling-framework
+    - eclipse-egit
+    # - eclipse-cdt-launch-remote
+    # - eclipse-cdt-profiling-framework-remote
+    # - eclipse-cdt-valgrind-remote
+    # - eclipse-rcp
+    # - eclipse-rse
   sudo: true
 
 - name: Download dotfiles

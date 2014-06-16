@@ -3,11 +3,14 @@
   gather_facts: true
   vars:
     ansible_connection: local
+    user: "{{ ansible_env.USER }}"
+    email: steve.lorimer@gmail.com
+    postfix_domain: postfix.lori.com
+    notify_email: "{{ email | regex_replace('^(.*)@.*$', '\\\\1') }}+{{ ansible_hostname }}@{{ email | regex_replace('^.*@(.*)$', '\\\\1') }}"
   sudo: false
-  user: "{{ ansible_env.USER }}"
+  user: "{{ user }}"
   roles:
     - ubuntu-base
     - ubuntu-dev
-    - ubuntu-vivcourt
     - ubuntu-steve-env
 

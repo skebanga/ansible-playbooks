@@ -1,0 +1,7 @@
+- name: newaliases
+  command: newaliases
+  sudo: true
+
+- name: reload postfix
+  service: name=postfix state=reloaded
+  sudo: true

@@ -5,40 +5,95 @@
 
 - name: Install required packages
   apt: pkg={{item}} state=installed
-  with_items: required_packages
+  with_items:
+    - vim
+    - htop
+    - nethogs
+    - nload
+    - iptraf
+    - unattended-upgrades
+    - logwatch
+    - fail2ban
   sudo: true
 
-- name: Download hub
-  git: repo=https://github.com/github/hub.git dest=/tmp/hub
-
-- name: Install hub
-  command: rake install prefix=/usr/local chdir=/tmp/hub creates=/usr/local/bin/hub
-  sudo: true
+  # git config
 
 - name: Configure git
   template: src=git-config dest={{ansible_env.HOME}}/.gitconfig
 
-- name: Download Sublime Text 3
-  get_url: url={{sublime_text_deb}} dest=/tmp/sublime-text-3.deb
+  # unattended upgrades
 
-- name: Install Sublime Text 3
-  apt: deb=/tmp/sublime-text-3.deb
+- name: Copy the unattended upgrades config file
+  copy: src=50unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades
   sudo: true
 
-- name: Install ctags
-  git: repo=https://github.com/SublimeText/CTags dest={{ ansible_env.HOME }}/.config/sublime-text-3/Packages/CTags
+- name: Copy the unattended upgrades shedule file
+  copy: src=10periodic dest=/etc/apt/apt.conf.d/10periodic
+  sudo: true
+
+  # postfix
+
+- name: Enable non-interactive postfix configuration via debconf selections
+  template: src=postfix_selections dest=/tmp/postfix_selections
+
+- name: Set up Postfix to relay mail
+  command: debconf-set-selections /tmp/postfix_selections
+
+- name: Install postfix
+  apt: pkg={{item}} state=installed
+  with_items:
+    - postfix
+    - mailutils
+  sudo: true
+
+- name: Configure root alias to send to notify_email
+  lineinfile: "dest=/etc/aliases regexp='^root:' line='root: {{ notify_email }}'"
+  notify: newaliases
+  sudo: true
+
+  # logwatch
+
+- name: Copy logwatch configuration
+  copy: src=/usr/share/logwatch/default.conf/logwatch.conf dest=/etc/logwatch/logwatch.conf owner=root group=root mode=644
+  sudo: true
+
+- name: Configure logwatch
+  lineinfile: dest=/etc/logwatch/logwatch.conf regexp="{{ item.regexp }}" line="{{ item.line }}"
+  with_items:
+    - { regexp: "^Output =.*$", line: "Output = mail" }
+    - { regexp: "^Format =.*$", line: "Format = html" }
+  sudo: true
+
+  # sublime text
+
+- name: Check whether sublime text already exists
+  command: /usr/bin/test -e /usr/bin/subl
+  register: sublime_text_exists
+  ignore_errors: true
+
+- name: Download sublime text
+  get_url: url={{sublime_text_deb}} dest=/tmp/sublime-text-3.deb
+  when: sublime_text_exists|failed
+
+- name: Install sublime text
+  apt: deb=/tmp/sublime-text-3.deb
+  sudo: true
+  when: sublime_text_exists|failed
+
+  # chrome
 
 - name: Add Google apt key
   apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state=present
   sudo: true
+  register: added_google_repo
 
 - name: Add Google repo
   copy: src=google-chrome.list dest=/etc/apt/sources.list.d/google-chrome.list owner=root group=root mode=644 force=false
   sudo: true
-  register: added_gogole_repo
+  when: added_google_repo|changed
 
 - name: Install Chrome
   apt: pkg=google-chrome-stable state=installed update_cache=yes
   sudo: true
-  when: added_gogole_repo|changed
+  when: added_google_repo|changed
 

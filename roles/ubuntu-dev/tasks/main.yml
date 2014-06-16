@@ -1,6 +1,29 @@
 ---
 - name: Install required packages
   apt: pkg={{item}} state=installed
-  with_items: required_packages
+  with_items:
+    - g++
+    - python-dev
+    - python-pip
+    - meld
+    - rake
+    - exuberant-ctags
   sudo: true
+
+- name: Check whether hub already exists
+  command: /usr/bin/test -e /usr/local/bin/hub
+  register: hub_exists
+  ignore_errors: true
+
+- name: Download hub
+  git: repo=https://github.com/github/hub.git dest=/tmp/hub
+  when: hub_exists|failed
+
+- name: Install hub
+  command: rake install prefix=/usr/local chdir=/tmp/hub
+  sudo: true
+  when: hub_exists|failed
+
+- name: Install ctags
+  git: repo=https://github.com/SublimeText/CTags dest={{ ansible_env.HOME }}/.config/sublime-text-3/Packages/CTags
 
