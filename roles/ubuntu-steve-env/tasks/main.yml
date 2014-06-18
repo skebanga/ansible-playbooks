@@ -3,6 +3,7 @@
   apt: pkg={{item}} state=installed
   with_items:
     - compizconfig-settings-manager
+    - dconf-editor
     - eclipse-cdt
     - eclipse-cdt-valgrind
     - eclipse-cdt-perf
@@ -13,6 +14,7 @@
     # - eclipse-cdt-valgrind-remote
     # - eclipse-rcp
     # - eclipse-rse
+    - ipython-notebook
   sudo: true
 
 - name: Download dotfiles
@@ -26,6 +28,9 @@
 
 - name: Disable show desktop in alt-tab
   command: gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ disable-show-desktop true
+
+- name: Disable HUD
+  command: gsettings set org.compiz.unityshell:/org/compiz/integrated/ show-hud "['']"
 
 - name: Enable integrated menus (show menus in windows title bar)
   command: gsettings set com.canonical.Unity integrated-menus true

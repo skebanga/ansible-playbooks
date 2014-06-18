@@ -4,6 +4,7 @@
   with_items:
     - libgoogle-perftools-dev
     - libboost1.55-all-dev
+    - libpcap-dev
     - libzmq3-dev
     - python-numpy
     - python-scipy
