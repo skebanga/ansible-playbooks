@@ -1,4 +1,6 @@
 ---
 name: Steve Lorimer
 sublime_text_deb: http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb
-
+myorigin: \\$myhostname
+relayhost: ""
+inet_interfaces: loopback-only

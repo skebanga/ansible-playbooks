@@ -10,6 +10,12 @@
     - raid
     - nfs
 
+  # enable auto boot
+- name: Set grub to autoboot ubuntu
+  lineinfile: dest=/etc/default/grub regexp='GRUB_TIMEOUT' line='GRUB_TIMEOUT=0'
+  sudo: true
+  notify: reload grub
+  tags: grub
 
   # assemble raid array
 
@@ -24,7 +30,7 @@
   tags: raid
 
 - name: Mount raid
-  mount: "name=/mnt/raid src={{ raid_device.stdout }} fstype=xfs state=mounted"
+  mount: "name=/mnt/raid src={{ raid_device.stdout }} fstype=ext4 state=mounted"
   sudo: true
   tags: raid
 
@@ -48,12 +54,8 @@
   sudo: true
   tags: nfs
 
-
 # enable smartctl monitoring
-
 # enable mdmonitor monitoring
-
-
 
 # lynis
 # rkhunter

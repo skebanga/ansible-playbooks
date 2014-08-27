@@ -33,17 +33,30 @@
 
   # postfix
 
-- name: Enable non-interactive postfix configuration via debconf selections
-  template: src=postfix_selections dest=/tmp/postfix_selections
+# - name: Enable non-interactive postfix configuration via debconf selections
+#   template: src=postfix_selections dest=/tmp/postfix_selections
 
-- name: Set up Postfix to relay mail
-  command: debconf-set-selections /tmp/postfix_selections
+# - name: Set up Postfix to relay mail
+#   command: debconf-set-selections /tmp/postfix_selections
 
 - name: Install postfix
   apt: pkg={{item}} state=installed
   with_items:
     - postfix
     - mailutils
+  sudo: true
+
+- name: postfix | configure
+  lineinfile: dest=/etc/postfix/main.cf regexp="{{ item.regexp }}" line="{{ item.line }}"
+  with_items:
+      - { regexp: "^myhostname", line: "myhostname = {{ myhostname }}" }
+      - { regexp: "^myorigin", line: "myorigin = {{ myorigin }}" }
+      - { regexp: "^mydestination", line: "mydestination = " }
+      - { regexp: "^relayhost", line: "relayhost = {{ relayhost }}" }
+      - { regexp: "^inet_interfaces", line: "inet_interfaces = {{ inet_interfaces }}" }
+      - { regexp: "^virtual_maps =", line: "virtual_maps = hash:/etc/aliases" }
+  notify: reload postfix
+  tags: postfix
   sudo: true
 
 - name: Configure root alias to send to notify_email

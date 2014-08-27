@@ -1,0 +1,10 @@
+---
+
+- name: Install required packages
+  apt: pkg={{item}} state=installed
+  with_items:
+    - nfs-common
+  sudo: true
+  tags:
+    - nfs
+

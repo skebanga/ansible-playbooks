@@ -4,12 +4,13 @@
   vars:
     ansible_connection: local
     email: steve.lorimer@gmail.com
-    postfix_domain: postfix.lori.com
-    notify_email: "{{ email | regex_replace('^(.*)@.*$', '\\\\1') }}+{{ ansible_hostname }}@{{ email | regex_replace('^.*@(.*)$', '\\\\1') }}"
+    myhostname: theloris.org
+    notify_email: "{{ email }}"
+    # notify_email: "{{ email | regex_replace('^(.*)@.*$', '\\\\1') }}+{{ ansible_hostname }}@{{ email | regex_replace('^.*@(.*)$', '\\\\1') }}"
   sudo: false
   user: "{{ ansible_env.USER }}"
   roles:
     - ubuntu-base
     - ubuntu-steve-env
-    - ubuntu-raid
+    - ubuntu-raid-server
 
