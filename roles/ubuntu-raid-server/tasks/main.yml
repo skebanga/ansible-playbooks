@@ -1,0 +1,61 @@
+---
+
+- name: Install required packages
+  apt: pkg={{item}} state=installed
+  with_items:
+    - mdadm
+    - nfs-kernel-server
+  sudo: true
+  tags:
+    - raid
+    - nfs
+
+  # enable auto boot
+- name: Set grub to autoboot ubuntu
+  lineinfile: dest=/etc/default/grub regexp='GRUB_TIMEOUT' line='GRUB_TIMEOUT=0'
+  sudo: true
+  notify: reload grub
+  tags: grub
+
+  # assemble raid array
+
+- name: Create raid configuration file
+  shell: mdadm --detail --scan > /etc/mdadm.conf
+  sudo: true
+  tags: raid
+
+- name: Parse raid device
+  shell: "awk '{ print $2 }' /etc/mdadm.conf"
+  register: raid_device
+  tags: raid
+
+- name: Mount raid
+  mount: "name=/mnt/raid src={{ raid_device.stdout }} fstype=ext4 state=mounted"
+  sudo: true
+  tags: raid
+
+  # export raid via nfs
+
+- name: Create raid export
+  mount: name=/export/raid src=/mnt/raid fstype=none opts=bind state=present
+  sudo: true
+  tags: nfs
+
+- name: Mount raid export
+  mount: name=/export/raid src=/mnt/raid fstype=none opts=bind state=mounted
+  sudo: true
+  tags: nfs
+
+- name: Configure exports
+  lineinfile: dest=/etc/exports line="{{ item }}" create=yes
+  with_items:
+    - '/export      192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)'
+    - '/export/raid 192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)'
+  sudo: true
+  tags: nfs
+
+# enable smartctl monitoring
+# enable mdmonitor monitoring
+
+# lynis
+# rkhunter
