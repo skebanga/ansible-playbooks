@@ -12,6 +12,7 @@
   roles:
     - ubuntu-base
     - ubuntu-dev
+    - ubuntu-ide
     - ubuntu-steve-env
     - ubuntu-raid-client
 
